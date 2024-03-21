@@ -1,19 +1,34 @@
 import Vimeo from "@vimeo/player";
+import throttle from "lodash.throttle";
 
 const iframe = document.querySelector('iframe');
 
-    const player = new Vimeo(iframe);
+const player = new Vimeo(iframe);
 
-    player.on('play', function(timeupdate) {
-        console.log('played the video!');
-        console.log(timeupdate);
+const localStorageKey = "videoplayer-current-time";
 
-        const localStorageKey = "videoplayer-current-time"
+const savePlayerTime = localStorage.getItem(localStorageKey);
 
-        localStorage.setItem(localStorageKey, JSON.stringify(timeupdate))
+console.log(savePlayerTime)
 
-        // localStorage.clear();
-    });
+player.setCurrentTime(savePlayerTime)
+    .then(function (seconds) {
+        console.log(seconds)
+        })
+    .catch(function (error) {
+        switch (error.name) {
+        case 'RangeError':
+        break;
+
+        default:
+        break;
+        }
+});
+ 
+player.on('timeupdate', throttle(function ({ seconds }) {
+    console.log(seconds);
+    localStorage.setItem(localStorageKey, seconds);
+}, 3000));
 
     player.getVideoTitle().then(function(title) {
         console.log('title:', title);
