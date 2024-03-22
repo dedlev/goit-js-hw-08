@@ -9,8 +9,6 @@ const localStorageKey = "videoplayer-current-time";
 
 const savePlayerTime = localStorage.getItem(localStorageKey);
 
-console.log(savePlayerTime)
-
 player.setCurrentTime(savePlayerTime)
     .then(function (seconds) {
         console.log(seconds)
@@ -26,9 +24,9 @@ player.setCurrentTime(savePlayerTime)
 });
  
 player.on('timeupdate', throttle(function ({ seconds }) {
-    console.log(seconds);
+    console.log('videoplayer-current-time:', seconds);
     localStorage.setItem(localStorageKey, seconds);
-}, 3000));
+}, 1000));
 
     player.getVideoTitle().then(function(title) {
         console.log('title:', title);
